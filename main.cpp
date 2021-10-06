@@ -23,7 +23,7 @@ constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1);
 
 constexpr size_t n_mix = 10;
 
-vector<vector<double> > signal_pairs, mixed_pairs;
+vector<double> signal_pairs(Dphi_bins*Deta_bins), mixed_pairs(Dphi_bins*Deta_bins);
 
 
 //=================================================================
