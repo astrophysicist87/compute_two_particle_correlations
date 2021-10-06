@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -125,9 +127,15 @@ void get_signal_pairs( const vector<vector<double> > & event )
 	const size_t event_size = event.size();
 
 	for ( size_t i = 0; i < event_size; i++ )
-	for ( size_t j = i+1; j < event_size; j++ )
-		signal_pairs[indexer( get_Dphi_bin(i[0]-j[0]),
-							  get_Deta_bin(i[1]-j[1]) )]++;
+	{
+		const auto & p1 = event[i];
+		for ( size_t j = i+1; j < event_size; j++ )
+		{
+			const auto & p2 = event[j];
+			signal_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
+								   get_Deta_bin(p1[1]-p2[1]) ) ]++;
+		}
+	}
 
 	return;
 }
@@ -141,8 +149,15 @@ void get_mixed_pairs( const vector<vector<double> > & event1,
 	const size_t event2_size = event2.size();
 
 	for ( size_t i = 0; i < event1_size; i++ )
-	for ( size_t j = 0; j < event2_size; j++ )
-		mixed_pairs[indexer( get_Dphi_bin(i[0]-j[0]),
-							 get_Deta_bin(i[1]-j[1]) )]++;
+	{
+		const auto & p1 = event1[i];
+		for ( size_t j = i+1; j < event2_size; j++ )
+		{
+			const auto & p2 = event2[j];
+			mixed_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
+								  get_Deta_bin(p1[1]-p2[1]) ) ]++;
+		}
+	}
+
 	return;
 }
