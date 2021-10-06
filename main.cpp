@@ -134,7 +134,7 @@ void get_signal_pairs( const vector<vector<double> > & event )
 		{
 			const auto & p2 = event[j];
 			signal_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
-								   get_Deta_bin(p1[1]-p2[1]) ) ]++;
+								   get_Deta_bin(p1[1]-p2[1]) ) ] += 1.0;
 		}
 	}
 
@@ -156,7 +156,7 @@ void get_mixed_pairs( const vector<vector<double> > & event1,
 		{
 			const auto & p2 = event2[j];
 			mixed_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
-								  get_Deta_bin(p1[1]-p2[1]) ) ]++;
+								  get_Deta_bin(p1[1]-p2[1]) ) ] += 1.0;
 		}
 	}
 
