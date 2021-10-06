@@ -35,13 +35,13 @@ size_t get_Dphi_bin( double & Dphi )
 {
 	while ( Dphi < Dphimin ) Dphi += twopi;
 	while ( Dphi < Dphimax ) Dphi -= twopi;
-	return static_cast<side_t>( (Dphi - Dphimin)/Dphi_bw );
+	return static_cast<size_t>( (Dphi - Dphimin)/Dphi_bw );
 }
 
 //=================================================================
 size_t get_Deta_bin( double & Deta )
 {
-	return static_cast<side_t>( (Deta - Detamin)/Deta_bw );
+	return static_cast<size_t>( (Deta - Detamin)/Deta_bw );
 }
 
 //=================================================================
