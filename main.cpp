@@ -42,7 +42,7 @@ size_t get_Dphi_bin( double Dphi_in )
 }
 
 //=================================================================
-size_t get_Deta_bin( double & Deta )
+size_t get_Deta_bin( double Deta )
 {
 	return static_cast<size_t>( (Deta - Detamin)/Deta_bw );
 }
