@@ -156,24 +156,16 @@ void read_in_file(string filename, vector<double> & event)
 //==================================================================
 void get_signal_pairs( const vector<double> & event )
 {
-cout << __LINE__ << endl;
 	const size_t event_size = event.size()/2;
-cout << __LINE__ << endl;
 
 	for ( size_t i = 0;   i < event_size; i++ )
-	{
-cout << __LINE__ << ": " << i << "\n";
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
-//cout << __LINE__ << ": " << i << " " << j << "\n";
-		signal_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
-							   get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
-//cout << __LINE__ << ": " << i << " " << j << "\n";
+		const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
+		const size_t Deta_ij = get_Deta_bin(event[2*i+1]-event[2*j+1]);
+		if ( Deta_ij >= 0 && Deta_ij <= Deta_bins )
+			signal_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
 	}
-cout << __LINE__ << ": " << i << "\n";
-
-	}
-cout << __LINE__ << endl;
 
 	return;
 }
@@ -187,8 +179,12 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 
 	for ( size_t i = 0; i < event1_size; i++ )
 	for ( size_t j = 0; j < event2_size; j++ )
-		mixed_pairs[ indexer( get_Dphi_bin(event1[2*i+0]-event2[2*j+0]),
-							  get_Deta_bin(event1[2*i+1]-event2[2*j+1]) ) ] += 1.0;
+	{
+		const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
+		const size_t Deta_ij = get_Deta_bin(event1[2*i+1]-event2[2*j+1]);
+		if ( Deta_ij >= 0 && Deta_ij <= Deta_bins )
+			mixed_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
+	}
 
 	return;
 }
