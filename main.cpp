@@ -13,18 +13,16 @@ using namespace std;
 //=================================================================
 constexpr size_t Dphi_bins = 100;
 constexpr size_t Deta_bins = 100;
+constexpr size_t n_mix = 10;
 
 constexpr double pi = 3.1415926535897932384626433;
 constexpr double twopi = 2.0*pi;
 constexpr double Dphimin = -pi, Dphimax = pi;
 constexpr double Detamin = -4.0, Detamax = 4.0;
-constexpr double Dphi_bw = twopi/(Dphi_bins+1);
-constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1);
-
-constexpr size_t n_mix = 10;
+constexpr double Dphi_bw = twopi/(Dphi_bins+1.0);
+constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1.0);
 
 vector<double> signal_pairs, mixed_pairs;
-
 
 //=================================================================
 inline size_t indexer( size_t i, size_t j )
@@ -89,11 +87,12 @@ int main(int argc, char *argv[])
 		vector<double> event_to_mix;
 		for ( const size_t & mix_event : mix_events )
 		{
+			cout << "(before)mix_event = " << mix_event << endl;
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
 			cout << "iArg = " << iArg << endl;
-			cout << "mix_event = " << mix_event << endl;
+			cout << "(after)mix_event = " << mix_event << endl;
 			cout << "argc = " << argc << endl;
 			cout << "\t - mixing " << argv[iArg] << " with " << argv[mix_event] << endl;
 
@@ -137,7 +136,6 @@ void read_in_file(string filename, vector<double> & event)
 		{
 			istringstream iss(line);
 			iss >> phi >> eta;
-			//event.push_back( vector<double>({phi, eta}) );
 			event.push_back(phi);
 			event.push_back(eta);
 		}
@@ -152,7 +150,7 @@ void get_signal_pairs( const vector<double> & event )
 {
 	const size_t event_size = event.size()/2;
 
-	for ( size_t i = 0; i < event_size; i++ )
+	for ( size_t i = 0;   i < event_size; i++ )
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
 		signal_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
