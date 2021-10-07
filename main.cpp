@@ -165,8 +165,8 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 
 	for ( size_t i = 0; i < event1_size; i++ )
 	for ( size_t j = 0; j < event2_size; j++ )
-		mixed_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
-							  get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
+		mixed_pairs[ indexer( get_Dphi_bin(event1[2*i+0]-event2[2*j+0]),
+							  get_Deta_bin(event1[2*i+1]-event2[2*j+1]) ) ] += 1.0;
 
 	return;
 }
