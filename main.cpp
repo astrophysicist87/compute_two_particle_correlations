@@ -48,10 +48,9 @@ size_t get_Deta_bin( double Deta )
 }
 
 //=================================================================
-void read_in_file( string filename, vector<vector<double> > & event );
-void get_signal_pairs( const vector<vector<double> > & event );
-void get_mixed_pairs( const vector<vector<double> > & event1,
-					  const vector<vector<double> > & event2 );
+void read_in_file( string filename, vector<double> & event );
+void get_signal_pairs( const vector<double> & event );
+void get_mixed_pairs( const vector<double> & event1, const vector<double> & event2 );
 
 //=================================================================
 int main(int argc, char *argv[])
@@ -66,13 +65,13 @@ int main(int argc, char *argv[])
 		cout << "Reading in " << argv[iArg] << endl;
 
 		string filename = argv[iArg];
-		vector<vector<double> > event;
+		vector<double> event;
 		read_in_file( filename, event );
 
 		cout << "Read in " << argv[iArg] << endl;
 
 		// update signal pair distribution
-		cout << "Updating signal distribution...";
+		cout << "Updating signal distribution..." << flush;
 		get_signal_pairs( event );
 		cout << "done!" << endl;
 
@@ -84,7 +83,7 @@ int main(int argc, char *argv[])
 
 		// loop over randomly chosen events and form background pairs
 		size_t mixCount = 0;
-		vector<vector<double> > event_to_mix;
+		vector<double> event_to_mix;
 		for ( const size_t & mix_event : mix_events )
 		{
 			if ( mixCount >= n_mix ) break;
@@ -94,7 +93,7 @@ int main(int argc, char *argv[])
 
 			read_in_file( argv[mix_event], event_to_mix );
 
-			cout << "Updating mixed distribution...";
+			cout << "Updating mixed distribution..." << flush;
 			get_mixed_pairs( event, event_to_mix );
 			cout << "done!" << endl;
 
@@ -120,7 +119,7 @@ int main(int argc, char *argv[])
 }
 
 //==================================================================
-void read_in_file(string filename, vector<vector<double> > & event)
+void read_in_file(string filename, vector<double> & event)
 {
 	event.clear();
 	ifstream infile( filename.c_str() );
@@ -132,7 +131,9 @@ void read_in_file(string filename, vector<vector<double> > & event)
 		{
 			istringstream iss(line);
 			iss >> phi >> eta;
-			event.push_back( vector<double>({phi, eta}) );
+			//event.push_back( vector<double>({phi, eta}) );
+			event.push_back(phi);
+			event.push_back(eta);
 		}
 	}
 
@@ -141,19 +142,15 @@ void read_in_file(string filename, vector<vector<double> > & event)
 }
 
 //==================================================================
-void get_signal_pairs( const vector<vector<double> > & event )
+void get_signal_pairs( const vector<double> & event )
 {
-	const size_t event_size = event.size();
+	const size_t event_size = event.size()/2;
 
 	for ( size_t i = 0; i < event_size; i++ )
+	for ( size_t j = i+1; j < event_size; j++ )
 	{
-		const auto & p1 = event[i];
-		for ( size_t j = i+1; j < event_size; j++ )
-		{
-			const auto & p2 = event[j];
-			signal_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
-								   get_Deta_bin(p1[1]-p2[1]) ) ] += 1.0;
-		}
+		signal_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
+							   get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
 	}
 
 	return;
@@ -161,22 +158,15 @@ void get_signal_pairs( const vector<vector<double> > & event )
 
 
 //==================================================================
-void get_mixed_pairs( const vector<vector<double> > & event1,
-					  const vector<vector<double> > & event2 )
+void get_mixed_pairs( const vector<double> & event1, const vector<double> & event2 )
 {
-	const size_t event1_size = event1.size();
-	const size_t event2_size = event2.size();
+	const size_t event1_size = event1.size()/2;
+	const size_t event2_size = event2.size()/2;
 
 	for ( size_t i = 0; i < event1_size; i++ )
-	{
-		const auto & p1 = event1[i];
-		for ( size_t j = i+1; j < event2_size; j++ )
-		{
-			const auto & p2 = event2[j];
-			mixed_pairs[ indexer( get_Dphi_bin(p1[0]-p2[0]),
-								  get_Deta_bin(p1[1]-p2[1]) ) ] += 1.0;
-		}
-	}
+	for ( size_t j = 0; j < event2_size; j++ )
+		mixed_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
+							  get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
 
 	return;
 }
