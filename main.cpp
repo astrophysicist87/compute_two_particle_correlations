@@ -82,6 +82,14 @@ int main(int argc, char *argv[])
                 std::back_inserter(mix_events), n_mix + 1,	// extra event in case
                 std::mt19937{std::random_device{}()});		// one is this event
 
+		for ( auto event_index : event_indices )
+			cout << event_index << "   ";
+		cout << endl;
+
+		for ( auto mix_event : mix_events )
+			cout << mix_event << "   ";
+		cout << endl;
+
 		// loop over randomly chosen events and form background pairs
 		size_t mixCount = 0;
 		vector<double> event_to_mix;
