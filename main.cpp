@@ -63,16 +63,16 @@ int main(int argc, char *argv[])
 	// loop over all files
 	for (size_t iArg = 1; iArg < argc; iArg++)
 	{
-		cout << "Reading in " << argv[iArg] << endl;
+		cout << "Reading in " << argv[iArg] << "; " << flush;
 
 		string filename = argv[iArg];
 		vector<double> event;
 		read_in_file( filename, event );
 
-		cout << "Read in " << argv[iArg] << endl;
+		cout << "read in " << event.size()/2 << " particles." << endl;
 
 		// update signal pair distribution
-		cout << "Updating signal distribution..." << endl;
+		cout << "\t - updating signal distribution..." << flush;
 		get_signal_pairs( event );
 		cout << "done!" << endl;
 
@@ -95,18 +95,14 @@ int main(int argc, char *argv[])
 		vector<double> event_to_mix;
 		for ( const size_t & mix_event : mix_events )
 		{
-			cout << "(before)mix_event = " << mix_event << endl;
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
-			cout << "iArg = " << iArg << endl;
-			cout << "(after)mix_event = " << mix_event << endl;
-			cout << "argc = " << argc << endl;
 			cout << "\t - mixing " << argv[iArg] << " with " << argv[mix_event] << endl;
 
 			read_in_file( argv[mix_event], event_to_mix );
 
-			cout << "Updating mixed distribution..." << endl;
+			cout << "\t - updating mixed distribution..." << flush;
 			get_mixed_pairs( event, event_to_mix );
 			cout << "done!" << endl;
 
@@ -117,6 +113,7 @@ int main(int argc, char *argv[])
 	} // end loop over all events
 
 	// output ratio of signal to background
+	cout << "Saving results to twoPC.dat" << endl;
 	ofstream outfile("twoPC.dat");
 	for (size_t iDphibin = 0; iDphibin < Dphi_bins; iDphibin++)
 	{
