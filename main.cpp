@@ -16,7 +16,7 @@ constexpr size_t Deta_bins = 100;
 
 constexpr double pi = 3.1415926535897932384626433;
 constexpr double twopi = 2.0*pi;
-constexpr double Dphimin = -4.0, Dphimax = 4.0;
+constexpr double Dphimin = -pi, Dphimax = pi;
 constexpr double Detamin = -4.0, Detamax = 4.0;
 constexpr double Dphi_bw = twopi/(Dphi_bins+1);
 constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1);
@@ -92,6 +92,9 @@ int main(int argc, char *argv[])
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
+			cout << "iArg = " << iArg << endl;
+			cout << "mix_event = " << mix_event << endl;
+			cout << "argc = " << argc << endl;
 			cout << "\t - mixing " << argv[iArg] << " with " << argv[mix_event] << endl;
 
 			read_in_file( argv[mix_event], event_to_mix );
