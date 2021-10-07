@@ -163,10 +163,10 @@ cout << __LINE__ << endl;
 	for ( size_t i = 0;   i < event_size; i++ )
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
-cout << __LINE__ << ": " << i << " " << j << endl;
+cout << __LINE__ << ": " << i << " " << j << "\n";
 		signal_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
 							   get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
-cout << __LINE__ << ": " << i << " " << j << endl;
+cout << __LINE__ << ": " << i << " " << j << "\n";
 	}
 cout << __LINE__ << endl;
 
