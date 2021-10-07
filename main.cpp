@@ -19,8 +19,8 @@ constexpr double pi = 3.1415926535897932384626433;
 constexpr double twopi = 2.0*pi;
 constexpr double Dphimin = -pi, Dphimax = pi;
 constexpr double Detamin = -4.0, Detamax = 4.0;
-constexpr double Dphi_bw = twopi/(Dphi_bins+1.0);
-constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1.0);
+constexpr double Dphi_bw = twopi/Dphi_bins;
+constexpr double Deta_bw = (Detamax-Detamin)/Deta_bins;
 
 vector<double> signal_pairs, mixed_pairs;
 
@@ -163,7 +163,7 @@ void get_signal_pairs( const vector<double> & event )
 	{
 		const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
 		const size_t Deta_ij = get_Deta_bin(event[2*i+1]-event[2*j+1]);
-		if ( Deta_ij >= 0 && Deta_ij <= Deta_bins )
+		if ( Deta_ij >= 0 && Deta_ij < Deta_bins )
 			signal_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
 	}
 
@@ -182,7 +182,7 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 	{
 		const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
 		const size_t Deta_ij = get_Deta_bin(event1[2*i+1]-event2[2*j+1]);
-		if ( Deta_ij >= 0 && Deta_ij <= Deta_bins )
+		if ( Deta_ij >= 0 && Deta_ij < Deta_bins )
 			mixed_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
 	}
 
