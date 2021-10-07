@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 		cout << "Read in " << argv[iArg] << endl;
 
 		// update signal pair distribution
-		cout << "Updating signal distribution..." << flush;
+		cout << "Updating signal distribution..." << endl;
 		get_signal_pairs( event );
 		cout << "done!" << endl;
 
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
 			read_in_file( argv[mix_event], event_to_mix );
 
-			cout << "Updating mixed distribution..." << flush;
+			cout << "Updating mixed distribution..." << endl;
 			get_mixed_pairs( event, event_to_mix );
 			cout << "done!" << endl;
 
@@ -156,14 +156,19 @@ void read_in_file(string filename, vector<double> & event)
 //==================================================================
 void get_signal_pairs( const vector<double> & event )
 {
+cout << __LINE__ << endl;
 	const size_t event_size = event.size()/2;
+cout << __LINE__ << endl;
 
 	for ( size_t i = 0;   i < event_size; i++ )
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
+cout << __LINE__ << ": " << i << " " << j << endl;
 		signal_pairs[ indexer( get_Dphi_bin(event[2*i+0]-event[2*j+0]),
 							   get_Deta_bin(event[2*i+1]-event[2*j+1]) ) ] += 1.0;
+cout << __LINE__ << ": " << i << " " << j << endl;
 	}
+cout << __LINE__ << endl;
 
 	return;
 }
