@@ -23,7 +23,7 @@ constexpr double Deta_bw = (Detamax-Detamin)/(Deta_bins+1);
 
 constexpr size_t n_mix = 10;
 
-vector<double> signal_pairs(Dphi_bins*Deta_bins), mixed_pairs(Dphi_bins*Deta_bins);
+vector<double> signal_pairs, mixed_pairs;
 
 
 //=================================================================
@@ -55,6 +55,9 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 //=================================================================
 int main(int argc, char *argv[])
 {
+	signal_pairs.resize(Dphi_bins*Deta_bins);
+	mixed_pairs.resize(Dphi_bins*Deta_bins);
+
 	// for choosing random events below
 	vector<size_t> event_indices;
 	for (size_t iArg = 1; iArg < argc; iArg++) event_indices.push_back( iArg );
