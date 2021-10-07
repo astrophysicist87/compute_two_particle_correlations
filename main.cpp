@@ -13,7 +13,7 @@ using namespace std;
 //=================================================================
 constexpr size_t Dphi_bins = 100;
 constexpr size_t Deta_bins = 100;
-constexpr size_t n_mix = 10;
+constexpr size_t n_mix = 3;
 
 constexpr double pi = 3.1415926535897932384626433;
 constexpr double twopi = 2.0*pi;
