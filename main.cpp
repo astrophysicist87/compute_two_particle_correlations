@@ -133,6 +133,9 @@ void read_in_file(string filename, vector<double> & event)
 		{
 			istringstream iss(line);
 			iss >> phi >> eta;
+
+			// impose cuts on eta
+			if ( abs(eta) > 2.4 ) continue;
 			event.push_back(phi);
 			event.push_back(eta);
 		}
@@ -152,8 +155,14 @@ void get_signal_pairs( const vector<double> & event )
 	{
 		const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
 		const size_t Deta_ij = get_Deta_bin(event[2*i+1]-event[2*j+1]);
-		if ( Deta_ij >= 0 && Deta_ij < Deta_bins )
+		if ( Dphi_ij >= 0 && Dphi_ij < Dphi_bins && Deta_ij >= 0 && Deta_ij < Deta_bins )
 			signal_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
+
+		// ensure reflection symmetry under eta --> -eta (is this correct?)
+		const size_t Dphi_ji = get_Dphi_bin(event[2*j+0]-event[2*i+0]);
+		const size_t Deta_ji = get_Deta_bin(event[2*j+1]-event[2*i+1]);
+		if ( Dphi_ji >= 0 && Dphi_ji < Dphi_bins && Deta_ji >= 0 && Deta_ji < Deta_bins )
+			signal_pairs[ indexer( Dphi_ji, Deta_ji ) ] += 1.0;
 	}
 
 	return;
