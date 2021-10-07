@@ -63,6 +63,8 @@ int main(int argc, char *argv[])
 	// loop over all files
 	for (size_t iArg = 1; iArg < argc; iArg++)
 	{
+		cout << "Reading in " << argv[iArg] << endl;
+
 		string filename = argv[iArg];
 		vector<vector<double> > event;
 		read_in_file( filename, event );
@@ -81,9 +83,10 @@ int main(int argc, char *argv[])
 		vector<vector<double> > event_to_mix;
 		for ( const size_t & mix_event : mix_events )
 		{
-
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
+
+			cout << "\t - mixing " << argv[iArg] << " with " << argv[mix_event] << endl;
 
 			read_in_file( argv[mix_event], event_to_mix );
 
@@ -96,7 +99,16 @@ int main(int argc, char *argv[])
 	} // end loop over all events
 
 	// output ratio of signal to background
-	// ...do this at home...
+	ofstream outfile("twoPC.dat");
+	for (size_t iDphibin = 0; iDphibin < Dphi_bins; iDphibin++)
+	{
+		for (size_t iDetabin = 0; iDetabin < Deta_bins; iDetabin++)
+			outfile << signal_pairs[ indexer( iDphibin, iDetabin ) ]
+						/ ( mixed_pairs[ indexer( iDphibin, iDetabin ) ] + 1e-10 ) << "   ";
+		outfile << endl;
+	}
+	outfile << endl;
+	outfile.close();
 
 	return 0;
 }
