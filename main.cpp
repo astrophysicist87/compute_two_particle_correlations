@@ -37,7 +37,7 @@ size_t get_Dphi_bin( double Dphi_in )
 {
 	double Dphi = Dphi_in;
 	while ( Dphi < Dphimin ) Dphi += twopi;
-	while ( Dphi < Dphimax ) Dphi -= twopi;
+	while ( Dphi > Dphimax ) Dphi -= twopi;
 	return static_cast<size_t>( (Dphi - Dphimin)/Dphi_bw );
 }
 
