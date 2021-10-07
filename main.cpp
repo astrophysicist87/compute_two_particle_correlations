@@ -11,15 +11,15 @@
 using namespace std;
 
 //=================================================================
-constexpr size_t Dphi_bins = 100;
-constexpr size_t Deta_bins = 100;
-constexpr size_t n_mix = 3;
+constexpr size_t Dphi_bins = 32;
+constexpr size_t Deta_bins = 28;
+constexpr size_t n_mix = 10;
 
 constexpr double pi = 3.1415926535897932384626433;
 constexpr double twopi = 2.0*pi;
-constexpr double Dphimin = -pi, Dphimax = pi;
+constexpr double Dphimin = -0.5*pi, Dphimax = 1.5*pi;
 constexpr double Detamin = -4.0, Detamax = 4.0;
-constexpr double Dphi_bw = twopi/Dphi_bins;
+constexpr double Dphi_bw = (Dphimax-Dphimin)/Dphi_bins;
 constexpr double Deta_bw = (Detamax-Detamin)/Deta_bins;
 
 vector<double> signal_pairs, mixed_pairs;
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 						/ ( mixed_pairs[ indexer( iDphibin, iDetabin ) ] + 1e-10 ) << "   ";
 		outfile << endl;
 	}
-	outfile << endl;
+	//outfile << endl;
 	outfile.close();
 
 	return 0;
