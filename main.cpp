@@ -69,8 +69,12 @@ int main(int argc, char *argv[])
 		vector<vector<double> > event;
 		read_in_file( filename, event );
 
+		cout << "Read in " << argv[iArg] << endl;
+
 		// update signal pair distribution
+		cout << "Updating signal distribution...";
 		get_signal_pairs( event );
+		cout << "done!" << endl;
 
 		// choose n_mix other random events to construct background
 		std::vector<size_t> mix_events;
@@ -90,7 +94,9 @@ int main(int argc, char *argv[])
 
 			read_in_file( argv[mix_event], event_to_mix );
 
+			cout << "Updating mixed distribution...";
 			get_mixed_pairs( event, event_to_mix );
+			cout << "done!" << endl;
 
 			mixCount++;
 
