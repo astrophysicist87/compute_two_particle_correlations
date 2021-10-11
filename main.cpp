@@ -76,16 +76,16 @@ int main(int argc, char *argv[])
 	// loop over all files
 	for (size_t iArg = 0; iArg < nArguments; iArg++)
 	{
-		cout << "Reading in " << arguments[iArg] << "; " << flush;
+		cout << "Reading in " << arguments[iArg] << "; ";
 
 		string filename = arguments[iArg];
 		vector<double> event;
 		read_in_file( filename, event );
 
-		cout << "read in " << event.size()/2 << " particles." << endl;
+		cout << "read in " << event.size()/2 << " particles.\n";
 
 		// update signal pair distribution
-		cout << "\t - updating signal distribution..." << flush;
+		cout << "\t - updating signal distribution...";
 		get_signal_pairs( event );
 		cout << "done!" << endl;
 
@@ -103,19 +103,21 @@ int main(int argc, char *argv[])
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
-			cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << endl;
+			cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << "\n";
 
 			read_in_file( arguments[mix_event], event_to_mix );
 
-			cout << "\t - updating mixed distribution..." << flush;
+			cout << "\t - updating mixed distribution...";
 			get_mixed_pairs( event, event_to_mix );
-			cout << "done!" << endl;
+			cout << "done!" << "\n";
 
 			mixCount++;
 
 		} // end loop over mixed events
 
 	} // end loop over all events
+
+	cout << flush;
 
 	// output ratio of signal to background
 	cout << "Saving results to twoPC.dat" << endl;
