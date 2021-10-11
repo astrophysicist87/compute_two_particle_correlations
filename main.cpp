@@ -46,6 +46,7 @@ size_t get_Deta_bin( double Deta )
 }
 
 //=================================================================
+void load_arg_file(string filename, vector<string> & arguments);
 void read_in_file( string filename, vector<double> & event );
 void get_signal_pairs( const vector<double> & event );
 void get_mixed_pairs( const vector<double> & event1, const vector<double> & event2 );
@@ -56,16 +57,28 @@ int main(int argc, char *argv[])
 	signal_pairs.resize(Dphi_bins*Deta_bins);
 	mixed_pairs.resize(Dphi_bins*Deta_bins);
 
+	vector<string> arguments;
+	if ( argc == 2 )
+	{
+		string argument_filename = argv[1];
+		load_arg_file(argument_filename, arguments);
+	}
+	else
+		for (size_t iArg = 1; iArg < argc; iArg++)
+			arguments.push_back( argv[iArg] );
+
+	const size_t nArguments = arguments.size();
+
 	// for choosing random events below
 	vector<size_t> event_indices;
-	for (size_t iArg = 1; iArg < argc; iArg++) event_indices.push_back( iArg );
+	for (size_t iArg = 0; iArg < nArguments; iArg++) event_indices.push_back( iArg );
 
 	// loop over all files
-	for (size_t iArg = 1; iArg < argc; iArg++)
+	for (size_t iArg = 0; iArg < nArguments; iArg++)
 	{
-		cout << "Reading in " << argv[iArg] << "; " << flush;
+		cout << "Reading in " << arguments[iArg] << "; " << flush;
 
-		string filename = argv[iArg];
+		string filename = arguments[iArg];
 		vector<double> event;
 		read_in_file( filename, event );
 
@@ -90,9 +103,9 @@ int main(int argc, char *argv[])
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
-			cout << "\t - mixing " << argv[iArg] << " with " << argv[mix_event] << endl;
+			cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << endl;
 
-			read_in_file( argv[mix_event], event_to_mix );
+			read_in_file( arguments[mix_event], event_to_mix );
 
 			cout << "\t - updating mixed distribution..." << flush;
 			get_mixed_pairs( event, event_to_mix );
@@ -118,6 +131,23 @@ int main(int argc, char *argv[])
 	outfile.close();
 
 	return 0;
+}
+
+//==================================================================
+void load_arg_file(string filename, vector<string> & arguments)
+{
+	string line;
+
+	arguments.clear();
+	ifstream infile( filename.c_str() );
+
+	// read in arguments one line at a time
+	if (infile.is_open())
+		while ( getline (infile, line) )
+			arguments.push_back( line );
+
+	infile.close();
+	return;
 }
 
 //==================================================================
