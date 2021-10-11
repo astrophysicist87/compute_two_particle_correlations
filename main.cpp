@@ -11,6 +11,8 @@
 using namespace std;
 
 //=================================================================
+constexpr bool read_in_all_files = true;
+
 constexpr size_t Dphi_bins = 32;
 constexpr size_t Deta_bins = 28;
 constexpr size_t n_mix = 10;
@@ -69,6 +71,16 @@ int main(int argc, char *argv[])
 
 	const size_t nArguments = arguments.size();
 
+	vector<vector<double> > allEvents;
+	if ( read_in_all_files )
+		for (size_t iArg = 0; iArg < nArguments; iArg++)
+		{
+			vector<double> nextEvent;
+			string filename = arguments[iArg];
+			read_in_file( filename, nextEvent );
+			allEvents.push_back( nextEvent );
+		}
+
 	// for choosing random events below
 	vector<size_t> event_indices;
 	for (size_t iArg = 0; iArg < nArguments; iArg++) event_indices.push_back( iArg );
@@ -80,7 +92,10 @@ int main(int argc, char *argv[])
 
 		string filename = arguments[iArg];
 		vector<double> event;
-		read_in_file( filename, event );
+		if (!read_in_all_files)
+			read_in_file( filename, event );
+		else
+			event = allEvents[iArg];
 
 		cout << "read in " << event.size()/2 << " particles.\n";
 
@@ -105,7 +120,10 @@ int main(int argc, char *argv[])
 
 			cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << "\n";
 
-			read_in_file( arguments[mix_event], event_to_mix );
+			if (!read_in_all_files)
+				read_in_file( arguments[mix_event], event_to_mix );
+			else
+				event_to_mix = allEvents[mix_event];
 
 			cout << "\t - updating mixed distribution...";
 			get_mixed_pairs( event, event_to_mix );
