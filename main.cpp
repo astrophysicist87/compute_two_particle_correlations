@@ -86,10 +86,12 @@ int main(int argc, char *argv[])
 	vector<size_t> event_indices;
 	for (size_t iArg = 0; iArg < nArguments; iArg++) event_indices.push_back( iArg );
 
+	size_t count = 0;
+
 	// loop over all files
 	for (size_t iArg = 0; iArg < nArguments; iArg++)
 	{
-		cout << "Reading in " << arguments[iArg] << "; ";
+		//cout << "Reading in " << arguments[iArg] << "; ";
 
 		string filename = arguments[iArg];
 		vector<double> event;
@@ -98,12 +100,12 @@ int main(int argc, char *argv[])
 		else
 			event = allEvents[iArg];
 
-		cout << "read in " << event.size()/2 << " particles.\n";
+		//cout << "read in " << event.size()/2 << " particles.\n";
 
 		// update signal pair distribution
-		cout << "\t - updating signal distribution...";
+		//cout << "\t - updating signal distribution...";
 		get_signal_pairs( event );
-		cout << "done!" << endl;
+		//cout << "done!" << endl;
 
 		// choose n_mix other random events to construct background
 		std::vector<size_t> mix_events;
@@ -119,24 +121,26 @@ int main(int argc, char *argv[])
 			if ( mixCount >= n_mix ) break;
 			if ( mix_event == iArg ) continue;
 
-			cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << "\n";
+			//cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << "\n";
 
 			if (!read_in_all_files)
 				read_in_file( arguments[mix_event], event_to_mix );
 			else
 				event_to_mix = allEvents[mix_event];
 
-			cout << "\t - updating mixed distribution...";
+			//cout << "\t - updating mixed distribution...";
 			get_mixed_pairs( event, event_to_mix );
-			cout << "done!" << "\n";
+			//cout << "done!" << "\n";
 
 			mixCount++;
 
 		} // end loop over mixed events
 
+		if (++count % 1000 == 0) cout << "Completed " << count << " events so far!" << endl;
+
 	} // end loop over all events
 
-	cout << flush;
+	//cout << flush;
 
 	// output ratio of signal to background
 	cout << "Saving results to twoPC.dat" << endl;
@@ -204,16 +208,22 @@ void get_signal_pairs( const vector<double> & event )
 	for ( size_t i = 0;   i < event_size; i++ )
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
-		const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
 		const size_t Deta_ij = get_Deta_bin(event[2*i+1]-event[2*j+1]);
-		if ( Dphi_ij >= 0 && Dphi_ij < Dphi_bins && Deta_ij >= 0 && Deta_ij < Deta_bins )
-			signal_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
+		if ( Deta_ij >= 0 && Deta_ij < Deta_bins )
+		{
+			const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
+			if ( Dphi_ij >= 0 && Dphi_ij < Dphi_bins )
+				signal_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
+		}
 
 		// ensure reflection symmetry under eta --> -eta (is this correct?)
-		const size_t Dphi_ji = get_Dphi_bin(event[2*j+0]-event[2*i+0]);
 		const size_t Deta_ji = get_Deta_bin(event[2*j+1]-event[2*i+1]);
-		if ( Dphi_ji >= 0 && Dphi_ji < Dphi_bins && Deta_ji >= 0 && Deta_ji < Deta_bins )
-			signal_pairs[ indexer( Dphi_ji, Deta_ji ) ] += 1.0;
+		if ( Deta_ji >= 0 && Deta_ji < Deta_bins )
+		{
+			const size_t Dphi_ji = get_Dphi_bin(event[2*j+0]-event[2*i+0]);
+			if ( Dphi_ji >= 0 && Dphi_ji < Dphi_bins )
+				signal_pairs[ indexer( Dphi_ji, Deta_ji ) ] += 1.0;
+		}
 	}
 
 	return;
@@ -229,10 +239,12 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 	for ( size_t i = 0; i < event1_size; i++ )
 	for ( size_t j = 0; j < event2_size; j++ )
 	{
-		const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
 		const size_t Deta_ij = get_Deta_bin(event1[2*i+1]-event2[2*j+1]);
 		if ( Deta_ij >= 0 && Deta_ij < Deta_bins )
+		{
+			const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
 			mixed_pairs[ indexer( Dphi_ij, Deta_ij ) ] += 1.0;
+		}
 	}
 
 	return;
