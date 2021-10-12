@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
 	vector<vector<size_t> > all_mix_events;
 	vector<vector<vector<size_t> > > all_mix_events_per_thread( omp_get_max_threads() );
 	const size_t arguments_per_thread = nArguments / omp_get_max_threads();
+	#pragma omp parallel for
 	for (size_t iThread = 0; iThread < omp_get_max_threads(); iThread++)
 	{
 		// try generating all mix events at once
