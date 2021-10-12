@@ -111,16 +111,20 @@ int main(int argc, char *argv[])
 	#pragma omp parallel for
 	for (size_t iThread = 0; iThread < omp_get_max_threads(); iThread++)
 	{
+		vector<size_t> event_indices_local = event_indices;
+		vector<vector<size_t> > & all_mix_events_local = all_mix_events_per_thread[iThread];
+		all_mix_events_local.resize( arguments_per_thread );
+
 		// try generating all mix events at once
 		for (size_t iArg = iThread * arguments_per_thread;
 					iArg < (iThread+1) * arguments_per_thread; iArg++)
 		{
 			// choose n_mix other random events to construct background
 			std::vector<size_t> mix_events;
-			std::sample(event_indices.begin(), event_indices.end(), 
+			std::sample(event_indices_local.begin(), event_indices_local.end(), 
 					std::back_inserter(mix_events), n_mix + 1,	// extra event in case
 					std::mt19937{std::random_device{}()});		// one is this event
-			all_mix_events_per_thread[iThread].push_back( mix_events );
+			all_mix_events_local[ iArg - iThread * arguments_per_thread ] = mix_events;
 			cout << "check: " << iThread << "   " << iArg << "\n";
 		}
 	}
