@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <omp.h>
 #include <random>
 #include <sstream>
 #include <string>
@@ -86,18 +87,60 @@ int main(int argc, char *argv[])
 	vector<size_t> event_indices;
 	for (size_t iArg = 0; iArg < nArguments; iArg++) event_indices.push_back( iArg );
 
-	// try generating all mix events at once
+//	// try generating all mix events at once
+//	for (size_t iArg = 0; iArg < nArguments; iArg++)
+//	{
+//		// choose n_mix other random events to construct background
+//		std::vector<size_t> mix_events;
+//		std::sample(event_indices.begin(), event_indices.end(), 
+//				std::back_inserter(mix_events), n_mix + 1,	// extra event in case
+//				std::mt19937{std::random_device{}()});		// one is this event
+//		all_mix_events.push_back( mix_events );
+//		cout << "Generated mix_events for iArg = " << iArg << " \n";
+//	}
+
+
+
+
+	/////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////
+
 	vector<vector<size_t> > all_mix_events;
-	for (size_t iArg = 0; iArg < nArguments; iArg++)
+	vector<vector<vector<size_t> > > all_mix_events_per_thread( omp_get_max_threads() );
+	const size_t arguments_per_thread = nArguments / omp_get_max_threads();
+	for (size_t iThread = 0; iThread < omp_get_max_threads(); iThread++)
+	{
+		// try generating all mix events at once
+		for (size_t iArg = iThread * arguments_per_thread;
+					iArg < (iThread+1) * arguments_per_thread; iArg++)
+		{
+			// choose n_mix other random events to construct background
+			std::vector<size_t> mix_events;
+			std::sample(event_indices.begin(), event_indices.end(), 
+					std::back_inserter(mix_events), n_mix + 1,	// extra event in case
+					std::mt19937{std::random_device{}()});		// one is this event
+			all_mix_events_per_thread[iThread].push_back( mix_events );
+			cout << "check: " << iThread << "   " << iArg << "\n";
+		}
+	}
+
+	for (size_t iThread = 0; iThread < omp_get_max_threads(); iThread++)
+	for (const auto & events_to_mix_here : all_mix_events_per_thread[iThread] )
+		all_mix_events.push_back( events_to_mix_here );
+
+
+	while ( all_mix_events.size() < nArguments )
 	{
 		// choose n_mix other random events to construct background
 		std::vector<size_t> mix_events;
 		std::sample(event_indices.begin(), event_indices.end(), 
-                std::back_inserter(mix_events), n_mix + 1,	// extra event in case
-                std::mt19937{std::random_device{}()});		// one is this event
+				std::back_inserter(mix_events), n_mix + 1,	// extra event in case
+				std::mt19937{std::random_device{}()});		// one is this event
 		all_mix_events.push_back( mix_events );
-		cout << "Generated mix_events for iArg = " << iArg << " \n";
 	}
+
+	/////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////
 
 
 	size_t count = 0;
