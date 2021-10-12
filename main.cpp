@@ -86,6 +86,20 @@ int main(int argc, char *argv[])
 	vector<size_t> event_indices;
 	for (size_t iArg = 0; iArg < nArguments; iArg++) event_indices.push_back( iArg );
 
+	// try generating all mix events at once
+	vector<vector<size_t> > all_mix_events;
+	for (size_t iArg = 0; iArg < nArguments; iArg++)
+	{
+		// choose n_mix other random events to construct background
+		std::vector<size_t> mix_events;
+		std::sample(event_indices.begin(), event_indices.end(), 
+                std::back_inserter(mix_events), n_mix + 1,	// extra event in case
+                std::mt19937{std::random_device{}()});		// one is this event
+		all_mix_events.push_back( mix_events );
+		cout << "Generated mix_events for iArg = " << iArg << " \n";
+	}
+
+
 	size_t count = 0;
 
 	// loop over all files
@@ -94,11 +108,12 @@ int main(int argc, char *argv[])
 		//cout << "Reading in " << arguments[iArg] << "; ";
 
 		string filename = arguments[iArg];
-		vector<double> event;
+		/*vector<double> event;
 		if (!read_in_all_files)
 			read_in_file( filename, event );
 		else
-			event = allEvents[iArg];
+			event = allEvents[iArg];*/
+		const vector<double> & event = allEvents[iArg];
 
 		//cout << "read in " << event.size()/2 << " particles.\n";
 
@@ -107,15 +122,17 @@ int main(int argc, char *argv[])
 		get_signal_pairs( event );
 		//cout << "done!" << endl;
 
+		/*
 		// choose n_mix other random events to construct background
 		std::vector<size_t> mix_events;
 		std::sample(event_indices.begin(), event_indices.end(), 
                 std::back_inserter(mix_events), n_mix + 1,	// extra event in case
                 std::mt19937{std::random_device{}()});		// one is this event
+		*/
+		const std::vector<size_t> & mix_events = all_mix_events[iArg];
 
 		// loop over randomly chosen events and form background pairs
 		size_t mixCount = 0;
-		vector<double> event_to_mix;
 		for ( const size_t & mix_event : mix_events )
 		{
 			if ( mixCount >= n_mix ) break;
@@ -123,10 +140,12 @@ int main(int argc, char *argv[])
 
 			//cout << "\t - mixing " << arguments[iArg] << " with " << arguments[mix_event] << "\n";
 
+			/*vector<double> event_to_mix;
 			if (!read_in_all_files)
 				read_in_file( arguments[mix_event], event_to_mix );
 			else
-				event_to_mix = allEvents[mix_event];
+				event_to_mix = allEvents[mix_event];*/
+			vector<double> & event_to_mix = allEvents[mix_event];
 
 			//cout << "\t - updating mixed distribution...";
 			get_mixed_pairs( event, event_to_mix );
@@ -178,6 +197,10 @@ void load_arg_file(string filename, vector<string> & arguments)
 //==================================================================
 void read_in_file(string filename, vector<double> & event)
 {
+	std::default_random_engine generator;
+	std::uniform_real_distribution<double> distribution(0.0, twopi);
+	double random_phi = distribution(generator);
+
 	event.clear();
 	ifstream infile( filename.c_str() );
 	if (infile.is_open())
@@ -191,7 +214,7 @@ void read_in_file(string filename, vector<double> & event)
 
 			// impose cuts on eta
 			if ( abs(eta) > 2.4 ) continue;
-			event.push_back(phi);
+			event.push_back(phi + random_phi);
 			event.push_back(eta);
 		}
 	}
