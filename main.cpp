@@ -11,11 +11,6 @@
 
 using namespace std;
 
-
-
-
-
-
 //=================================================================
 constexpr bool read_in_all_files = true;
 
