@@ -42,7 +42,7 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 //=================================================================
 int main(int argc, char *argv[])
 {
-  phi_bin_centers(Dphi_bins);
+  phi_bin_centers.resize(Dphi_bins);
 	signal_pairs.resize(Dphi_bins);
 	mixed_pairs.resize(Dphi_bins);
 
