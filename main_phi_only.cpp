@@ -203,7 +203,7 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 	for ( size_t j = 0; j < event2_size; j++ )
 	{
     const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
-    mixed_pairs[ Dphi_ij ) ] += 1.0;
+    mixed_pairs[ Dphi_ij ] += 1.0;
 	}
 
 	return;
