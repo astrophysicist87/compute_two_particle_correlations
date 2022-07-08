@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
 	vector<vector<double> > allEvents;
 	if ( read_in_all_files )
-		for (size_t iArg = 0; iArg < nArguments; iArg++)
+		for (int iArg = 0; iArg < nArguments; iArg++)
 		{
 			vector<double> nextEvent;
 			string filename = arguments.at(iArg);
