@@ -189,7 +189,7 @@ void get_signal_pairs( const vector<double> & event )
 	for ( size_t i = 0;   i < event_size; i++ )
 	for ( size_t j = i+1; j < event_size; j++ )
 	{
-    const size_t Dphi_ij = get_Dphi_bin(event[2*i+0]-event[2*j+0]);
+    const size_t Dphi_ij = get_Dphi_bin( event[i]-event[j] );
     if ( Dphi_ij >= 0 && Dphi_ij < Dphi_bins )
       signal_pairs[ Dphi_ij ] += 1.0;
 	}
@@ -207,7 +207,7 @@ void get_mixed_pairs( const vector<double> & event1, const vector<double> & even
 	for ( size_t i = 0; i < event1_size; i++ )
 	for ( size_t j = 0; j < event2_size; j++ )
 	{
-    const size_t Dphi_ij = get_Dphi_bin(event1[2*i+0]-event2[2*j+0]);
+    const size_t Dphi_ij = get_Dphi_bin(event1[i]-event2[j]);
     mixed_pairs[ Dphi_ij ] += 1.0;
 	}
 
