@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
 		} // end loop over mixed events
 
-		if (++count % 1000 == 0) cout << "Completed " << count << " events so far!" << endl;
+		if (++count % 10 == 0) cout << "Completed " << count << " events so far!" << endl;
 
 	} // end loop over all events
 
