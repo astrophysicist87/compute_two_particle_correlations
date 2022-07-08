@@ -61,6 +61,10 @@ int main(int argc, char *argv[])
 
 	const size_t nArguments = arguments.size();
 
+  for (string filename : arguments) cout << "Argument: " << filename << endl;
+  if (1) abort();
+
+
 	vector<vector<double> > allEvents;
 	if ( read_in_all_files )
 //		for (size_t iArg = 0; iArg < nArguments; iArg++)
