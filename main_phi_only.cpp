@@ -171,6 +171,11 @@ void read_in_file(string filename, vector<double> & event)
 			event.push_back(phi + random_phi);
 		}
 	}
+  else
+  {
+    cout << "Could not open " << filename << "!" << endl;
+    abort();
+  }
 
 	infile.close();
 	return;
