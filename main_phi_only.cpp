@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
 
 	const size_t nArguments = arguments.size();
 
-  for (string filename : arguments) cout << "Argument: " << filename << endl;
-  if (1) abort();
+//  for (string filename : arguments) cout << "Argument: " << filename << endl;
+//  if (1) abort();
 
 
 	vector<vector<double> > allEvents;
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
 //		for (size_t iArg = 0; iArg < nArguments; iArg++)
 		for (string filename : arguments)
 		{
+cout << "Argument: " << filename << endl;
 			vector<double> nextEvent;
 //			string filename = arguments.at(iArg);
 //      cout << "Currently using iArg = " << iArg << " in "
