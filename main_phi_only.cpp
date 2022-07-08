@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
 		for (size_t iArg = 0; iArg < nArguments; iArg++)
 		{
 			vector<double> nextEvent;
-			string filename = arguments[iArg];
-			cout << "Reading in " << filename << "(" << iArg+1 << " of " << nArguments
-            << ")\n";
+			string filename = arguments.at(iArg);
+			cout << "Reading in " << filename
+            << "(" << iArg+1 << " of " << nArguments << ")\n";
 			read_in_file( filename, nextEvent );
 			allEvents.push_back( nextEvent );
 		}
