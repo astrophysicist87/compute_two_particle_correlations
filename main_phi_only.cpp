@@ -67,16 +67,14 @@ int main(int argc, char *argv[])
 
 	vector<vector<double> > allEvents;
 	if ( read_in_all_files )
-//		for (size_t iArg = 0; iArg < nArguments; iArg++)
-		for (string filename : arguments)
+		for (size_t iArg = 0; iArg < nArguments; iArg++)
 		{
-cout << "Argument: " << filename << endl;
 			vector<double> nextEvent;
-//			string filename = arguments.at(iArg);
-//      cout << "Currently using iArg = " << iArg << " in "
-//            << arguments.size() << " vs " << argc << endl;
-//			cout << "Reading in " << filename
-//            << "(" << iArg+1 << " of " << nArguments << ")\n";
+			string filename = arguments.at(iArg);
+      cout << "Currently using iArg = " << iArg << " in "
+            << arguments.size() << " vs " << argc << endl;
+			cout << "Reading in " << filename
+            << "(" << iArg+1 << " of " << nArguments << ")\n";
       cout << "Reading in " << filename << "\n";
 			read_in_file( filename, nextEvent );
 			allEvents.push_back( nextEvent );
