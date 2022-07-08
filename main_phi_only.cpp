@@ -167,6 +167,7 @@ void read_in_file(string filename, vector<double> & event)
 
 	event.clear();
 	ifstream infile( filename.c_str() );
+cout << "Reading in " << filename << endl;
 	if (infile.is_open())
 	{
 		string line;
@@ -180,6 +181,7 @@ void read_in_file(string filename, vector<double> & event)
 			if ( abs(eta) > 2.4 ) continue;
 			event.push_back(phi + random_phi);
 		}
+cout << "event.size() = " << event.size() << endl;
 	}
   else
   {
