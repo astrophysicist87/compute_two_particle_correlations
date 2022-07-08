@@ -67,7 +67,8 @@ int main(int argc, char *argv[])
 		{
 			vector<double> nextEvent;
 			string filename = arguments[iArg];
-			cout << "Reading in " << filename << "\n";
+			cout << "Reading in " << filename << "(" << iArg+1 << " of " << nArguments
+            << ")\n";
 			read_in_file( filename, nextEvent );
 			allEvents.push_back( nextEvent );
 		}
